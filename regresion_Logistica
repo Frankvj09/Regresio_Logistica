@@ -1,0 +1,63 @@
+# 12. Transporte:
+# • Objetivo: Predecir si el costo de envío será alto (0 = Bajo, 1 = Alto) basándose en el
+#peso del envío, la distancia y la calificación del transportista.
+#• Variable objetivo: ShippingCost (>500 = 1, ≤500 = 0)
+
+
+# Importamos las librerías necesarias
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression  # Cambiamos a un modelo de regresión logística
+import matplotlib.pyplot as plt
+
+# Datos: Peso del envío, distancia y calificación del transportista
+# Columnas: [Peso del envío, Distancia, Calificación del transportista]
+shipping_data = np.array([
+    [valor_variabel_1, valor_variable_2, valor_variable_3],
+    
+])
+
+# Variable objetivo: Costo de envío (0 = Bajo, 1 = Alto)
+# Definimos que si el costo es mayor a 500 será "Alto" (1), de lo contrario "Bajo" (0)
+shipping_cost = np.array([0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1])
+
+# Definimos las variables independientes (peso, distancia y calificación) y la variable dependiente (costo de envío)
+X = shipping_data
+y = shipping_cost
+
+# Dividimos los datos en conjuntos de entrenamiento y prueba (80% entrenamiento, 20% prueba)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Creamos el modelo de regresión logística para la clasificación
+model = LogisticRegression()
+
+# Entrenamos el modelo con los datos de entrenamiento
+model.fit(X_train, y_train)
+
+# Realizamos predicciones sobre los datos de prueba
+y_pred = model.predict(X_test)
+
+# Evaluamos el modelo calculando la precisión (accuracy)
+accuracy = model.score(X_test, y_test)
+coefficient = model.coef_  # Coeficientes de las variables independientes
+intercept = model.intercept_  # Intercepto del modelo
+
+# Mostramos los resultados
+print("Logistic Regression Results")
+print("Accuracy:", accuracy)  # Mide la precisión del modelo
+print("Coefficients:", coefficient)  # Coeficientes que indican la importancia de cada variable
+print("Intercept:", intercept)  # Intercepto de la función logística
+
+# Imprimimos los valores reales vs. las predicciones
+print("Current vs. Predicted Shipping Cost Classification")
+for current, predicted in zip(y_test, y_pred):
+    print(f"Actual: {current}, Predicted: {predicted}")
+
+# Como el problema es de clasificación, no graficamos una línea de regresión pero podríamos graficar puntos clasificados
+plt.scatter(X[:, 0], y, color='blue', label='Actual Classification')  # Puntos de clasificación real
+plt.scatter(X_test[:, 0], y_pred, color='red', label='Predicted Classification', marker='x')  # Predicciones
+plt.xlabel('Shipping Weight (kg)')  # Etiqueta del eje X
+plt.ylabel('Shipping Cost Classification (0 = Low, 1 = High)')  # Etiqueta del eje Y
+plt.title('Logistic Regression: Shipping Cost Prediction')
+plt.legend()  # Muestra la leyenda
+plt.show()  # Muestra el gráfico
